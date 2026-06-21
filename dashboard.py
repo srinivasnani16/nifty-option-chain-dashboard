@@ -1,4 +1,5 @@
 from flask import Flask, render_template_string, request, session, redirect, url_for, jsonify
+from flask_cors import CORS
 import psycopg2
 import os
 from dotenv import load_dotenv
@@ -6,6 +7,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 app = Flask(__name__)
+CORS(app)
 app.secret_key = os.getenv("SECRET_KEY", "fallback-secret-key")
 
 DASHBOARD_PWD = os.getenv("DASHBOARD_PWD", "Nifty@2026")
@@ -392,7 +394,7 @@ def api_summary():
         latest_ts, raw_rows = get_latest_snapshot()
         if not latest_ts or not raw_rows:
             return jsonify({"error": "No data available"}), 404
-        atm_strike  = None
+        atm_strike = None
         total_ce_oi = 0
         total_pe_oi = 0
         for r in raw_rows:
